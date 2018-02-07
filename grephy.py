@@ -15,8 +15,11 @@ Description:
 
 Due Date: 05/07/18
 """
-
+# Python libraries
 import argparse, logging, sys
+
+# Custom python files
+import finite_automata as fa
 
 def read_file(fname):
     """
@@ -60,6 +63,24 @@ def get_alphabet(fname):
 
     return alphabet
 
+def create_fa(rgx, ab):
+    """
+    Creates and draws the NFA/DFA using the finite_automata.py file
+    using the given alphabet and regular expression.
+    
+    @type    rgx: string
+    @param   rgx: Regular expression as a string
+    @type    ab:  string
+    @param   ab:  Alphabet of NFA/DFA
+    @rtype:       tuple of finite_automata objects
+    @return:      (dfa, nfa)
+    """
+    # finite_automata(states, alphabet, transitions, init_state, acc_state)
+    nfa = fa.finite_automata(states=[], alphabet=ab, transitions=[], init_state='', acc_state=[])
+    dfa = fa.finite_automata(states=[], alphabet=ab, transitions=[], init_state='', acc_state=[])
+
+    return dfa, nfa
+
 def main():
     logging.basicConfig(level=logging.DEBUG, format='%(levelname)s:%(message)s')
 
@@ -69,13 +90,15 @@ def main():
     
     parser.add_argument('-d', '--DFA-FILE', nargs=1, help='Output file for DFA')
 
-    #parser.add_argument('REGEX', type=str, help='Regular expression file')
+    parser.add_argument('REGEX', type=str, help='Regular expression file')
     
     parser.add_argument('FILE', type=str, help='Input file')
 
     args = parser.parse_args()
 
     alphabet = get_alphabet(args.FILE)
+
+    dfa, nfa = create_fa(args.REGEX, alphabet)
 
 if __name__ == "__main__":
     main()
