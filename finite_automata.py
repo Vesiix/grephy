@@ -10,7 +10,18 @@ Description:
 
 class finite_automata:
     """
-    Object containing 5 tuple needed for creating an NFA or DFA..
+    Object containing 5 tuple needed for creating an NFA or DFA.
+    
+    @type   states:      list
+    @param  states:      All available states of NFA/DFA
+    @type   alphabet:    string
+    @param  alphabet:    Alphabet of the NFA/DFA
+    @type   transitions: list
+    @param  transitions: (delta) All transitions of the NFA/DFA
+    @type   init_state:  string
+    @param  init_state:  Initial state of the NFA/DFA
+    @type   acc_state:   list
+    @param  acc_state:   Accepting states of the NFA/DFA
     """
     def __init__(self, states, alphabet, transitions, init_state, acc_state):
         # List of states
