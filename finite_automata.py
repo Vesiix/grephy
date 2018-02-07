@@ -1,14 +1,17 @@
 #!/usr/bin/env python
-'''
+"""
 finite_automata.py
 
 Description:
   Creates DFA/NFA objects that can be drawn in dot format.
 
 @author Jesse Opitz
-'''
+"""
 
 class finite_automata:
+    """
+    Object containing 5 tuple needed for creating an NFA or DFA..
+    """
     def __init__(self, states, alphabet, transitions, init_state, acc_state):
         # List of states
         self.states = []

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-'''
+"""
 grephy.py
 
 Usage:
@@ -14,15 +14,22 @@ Description:
 @author Jesse Opitz
 
 Due Date: 05/07/18
-'''
+"""
 
 import argparse, logging, sys
 
 def read_file(fname):
+    """
+    Reads data inside a file.
+
+    @type    fname: string
+    @param   fname: Name of the file to read
+    @rtype:         string
+    @return:        Data within the file
+    """
     try:
         with open(fname, 'r') as f:
             data = f.read();
-
         return data
     except IOError as e:
         logging.critical("FILE['{2}'] I/O error({0}): {1}".format(e.errno, e.strerror, fname))
@@ -33,6 +40,15 @@ def read_file(fname):
         sys.exit(1)
 
 def get_alphabet(fname):
+    """
+    Get's the alphabet being used within the 
+    input file
+
+    @type    fname: string
+    @param   fname: Name of the input file.
+    @rtype:         string
+    @return:        The alphabet to being used in the file.
+    """
     alphabet = ''
     data = read_file(fname)
     for line in data:
@@ -60,7 +76,6 @@ def main():
     args = parser.parse_args()
 
     alphabet = get_alphabet(args.FILE)
-
 
 if __name__ == "__main__":
     main()
