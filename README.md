@@ -3,17 +3,18 @@ A python2.7 grep utility that searches files for regular expression pattern matc
 
 # Usage
 ```
-grephy.py [-h] [-n NFA_FILE] [-d DFA_FILE] REGEX-FILE
+usage: grephy.py [-h] [-n NFA_FILE] [-d DFA_FILE] REGEX FILE
 
 Searches files for regular expression pattern matches.
 
 positional arguments:
-  REGEX-FILE            Regular expression file
+  REGEX                 Regular expression file
+  FILE                  Input file
 
 optional arguments:
   -h, --help            show this help message and exit
   -n NFA_FILE, --NFA-FILE NFA_FILE
-                        File for NFA
+                        Output file for NFA
   -d DFA_FILE, --DFA-FILE DFA_FILE
-                        File for DFA
+                        Output file for DFA
 ```
