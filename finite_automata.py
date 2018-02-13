@@ -70,4 +70,31 @@ class finite_automata:
         # change state status is_acc = False
         # rem from list of acc_states
         print 'remove', state
+    
+    def get_states():
+        # returns a string of states
+        return ''
 
+    def get_alphabet():
+        # returns string of alphabet
+        return repr(self.alphabet)
+
+    def get_transitions():
+        # returns list of transitions
+        return []
+
+    def get_init():
+        # returns initial state
+        return self.init_state
+
+    def get_acc_state():
+        # returns list of accepting states
+        return []
+
+    def print_transitions():
+        # returns a string of a list of transitions
+        return ''
+
+    def print_acc_states():
+        # returns a string of a list of accepting states
+        return ''
