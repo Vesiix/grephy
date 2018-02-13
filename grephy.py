@@ -64,6 +64,7 @@ def get_alphabet(fname):
 
     return alphabet
 
+# OLD DON'T NEED?
 def create_fa(rgx, ab):
     """
     Creates and draws the NFA/DFA using the finite_automata.py file
@@ -98,8 +99,14 @@ def main():
     args = parser.parse_args()
 
     alphabet = get_alphabet(args.FILE)
-
-    dfa, nfa = create_fa(args.REGEX, alphabet)
+    
+    #dfa, nfa = create_fa(args.REGEX, alphabet)
+    
+    nfa = fa.finite_automata()
+    dfa = fa.finite_automata()
+    
+    dfa.set_alphabet(alphabet)
+    print(dfa.get_alphabet())
     """
     Add print functions to finite_automata
 
