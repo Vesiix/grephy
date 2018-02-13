@@ -20,6 +20,7 @@ import argparse, logging, sys
 
 # Custom python files
 import finite_automata as fa
+import state, edge
 
 def read_file(fname):
     """
@@ -76,8 +77,8 @@ def create_fa(rgx, ab):
     @return:      (dfa, nfa)
     """
     # finite_automata(states, alphabet, transitions, init_state, acc_state)
-    nfa = fa.finite_automata(states=[], alphabet=ab, transitions=[], init_state='', acc_state=[])
-    dfa = fa.finite_automata(states=[], alphabet=ab, transitions=[], init_state='', acc_state=[])
+    nfa = fa.finite_automata(alphabet=ab)
+    dfa = fa.finite_automata(alphabet=ab)
 
     return dfa, nfa
 
@@ -99,6 +100,15 @@ def main():
     alphabet = get_alphabet(args.FILE)
 
     dfa, nfa = create_fa(args.REGEX, alphabet)
+    """
+    Add print functions to finite_automata
 
+    logging.debug("DFA:
+            \nQ(set of states):{0}
+            \nSigma(alphabet):{1}
+            \nDelta(transitions):{2}
+            \nInitial State:{3}
+            \nAccepting States:{4}".format(dfa.print_states(), dfa.get_alphabet(), dfa.print_transitions(), dfa.get_init(), dfa.print_acc_states()))
+    """
 if __name__ == "__main__":
     main()
