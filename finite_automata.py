@@ -8,27 +8,30 @@ Description:
 @author Jesse Opitz
 """
 
+# Custom python files
+import edge, state
+
 class finite_automata:
     """
     Object containing 5 tuple needed for creating an NFA or DFA.
     
-    @type   states:      list
+    @type   states:      list of type state
     @param  states:      All available states of NFA/DFA
     @type   alphabet:    string
     @param  alphabet:    Alphabet of the NFA/DFA
-    @type   transitions: list
+    @type   transitions: list of type edge
     @param  transitions: (delta) All transitions of the NFA/DFA
     @type   init_state:  string
     @param  init_state:  Initial state of the NFA/DFA
-    @type   acc_state:   list
+    @type   acc_state:   list of type state
     @param  acc_state:   Accepting states of the NFA/DFA
     """
-    def __init__(self, states, alphabet, transitions, init_state, acc_state):
+    def __init__(self, alphabet):
         # List of states
         self.states = []
         
         # Alphabet
-        self.alphabet = ''
+        self.alphabet = alphabet
         
         # List of transitions
         self.transitions = []
@@ -41,4 +44,30 @@ class finite_automata:
     
     def draw(outfile):
         print 'draw finite automata'
+    
+    def add_state(name, is_init, is_acc):
+        new_state = State(name, is_init, is_acc)
+        self.states.append(new_state)
+
+    def rem_state(state_name):
+        print 'remove', state_name
+    
+    def add_transition(name, source, target):
+        new_edge = Edge(name, source, target)
+        self.transitions.append(new_edge)
+
+    def rem_transition(edge_name):
+        print 'remove', edge_name
+
+    def add_acc_state(state):
+        # go through list of states
+        # change state status is_acc = True
+        # add to list of acc_states
+        self.acc_states.append(state)
+    
+    def rem_acc_state(state):
+        # go through list of states
+        # change state status is_acc = False
+        # rem from list of acc_states
+        print 'remove', state
 
