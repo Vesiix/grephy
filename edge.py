@@ -14,20 +14,20 @@ class Edge:
         self.source = source
         self.target = target
 
-    def get_name():
+    def get_name(self):
         return self.name
 
-    def set_name(name):
+    def set_name(self, name):
         self.name = name
 
-    def get_source():
+    def get_source(self):
         return self.source
 
-    def set_source(state):
+    def set_source(self, state):
         self.source = state
 
-    def get_target():
+    def get_target(self):
         return self.target
 
-    def set_target(state):
+    def set_target(self, state):
         self.target = state
