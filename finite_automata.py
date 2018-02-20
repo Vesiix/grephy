@@ -9,7 +9,8 @@ Description:
 """
 
 # Custom python files
-import edge, state
+from state import *
+from edge import *
 
 class finite_automata:
     """
@@ -96,3 +97,22 @@ class finite_automata:
     def print_acc_states(self):
         # returns a string of a list of accepting states
         return ''
+
+    def print_five_tuple(self):
+        print "-->States:"
+        for s in self.states:
+            print s.get_name() 
+        print "-->Alphabet:", self.get_alphabet()
+        print "-->Transitions:"
+        for t in self.transitions:
+            print '(' + t.get_source() + ',' + t.get_name() + ') = ' +t.get_target()
+        print "-->Initial State:"
+        for s in self.states:
+            if s.get_init():
+                print s.get_name()
+                pass
+        print "-->Accepting States:"
+        for s in self.states:
+            if s.get_acc():
+                print s.get_name()
+                pass
