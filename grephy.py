@@ -80,13 +80,12 @@ def create_nfa(ab, rgx):
     nfa.add_state('q1', False, True)
     nfa.add_transition('a', 'q0', 'q1')
 
-    nfa.print_five_tuple() 
-
-    #for s in nfa.states:
-    #    print s.get_name()
+    print "NFA:"
+    nfa.print_five_tuple()
 
     return nfa
 
+# Kind of useless now that I have creates for each...
 def create_fa(rgx, ab):
     """
     Creates and draws the NFA/DFA using the finite_automata.py file
@@ -119,25 +118,11 @@ def main():
 
     args = parser.parse_args()
 
-    alphabet = find_alphabet(args.FILE)
+    ab = find_alphabet(args.FILE)
     
-    dfa, nfa = create_fa(args.REGEX, alphabet)
-    
+    nfa = create_nfa(ab, args.REGEX)
 
-    #print("DFA Alphabet:", dfa.get_alphabet())
-    #print("NFA Alphabet:", nfa.get_alphabet())
+    dfa = create_dfa(nfa) 
 
-    
-
-    """
-    Add print functions to finite_automata
-
-    logging.debug("DFA:
-            \nQ(set of states):{0}
-            \nSigma(alphabet):{1}
-            \nDelta(transitions):{2}
-            \nInitial State:{3}
-            \nAccepting States:{4}".format(dfa.print_states(), dfa.get_alphabet(), dfa.print_transitions(), dfa.get_init(), dfa.print_acc_states()))
-    """
 if __name__ == "__main__":
     main()
