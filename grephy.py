@@ -20,6 +20,8 @@ import argparse, logging, sys
 
 # Custom python files
 import finite_automata as fa
+import create_nfa as cnfa
+import create_dfa as cdfa
 import state, edge
 
 def read_file(fname):
@@ -64,67 +66,6 @@ def find_alphabet(fname):
 
     return alphabet
 
-# I think this should be its own file
-def create_dfa(nfa):
-    dfa = fa.finite_automata()
-
-    dfa.set_alphabet(nfa.get_alphabet)
-
-# I think this should be its own file
-def create_nfa(ab, rgx): 
-    # finite_automata(states, alphabet, transitions, init_state, acc_state)
-    nfa = fa.finite_automata()
-
-    nfa.set_alphabet(ab)
-    
-    state_num = 0
-
-    nfa.add_state('q' + str(state_num), True, False)
-
-    state_num += 1
-
-    # If simple regex with no |'s, *'s, or groupings
-    p = 0
-    while p < len(rgx):
-        if p == len(rgx)-1:
-            nfa.add_state('q' + str(state_num), False, True)
-        else:
-            nfa.add_state('q' + str(state_num), False, False)
-        # TODO: Source and target of transition should be a legit state, not string
-        nfa.add_transition(rgx[p], 'q' + str(state_num-1), 'q' + str(state_num))
-        state_num += 1
-        p += 1
-
-    #split_on_or = rgx.split('|')
-
-    #nfa.add_state('q1', False, True)
-    #nfa.add_transition('r', 'q0', 'q1')
-    
-    print "NFA:"
-    nfa.print_five_tuple()
-
-    return nfa
-
-# Kind of useless now that I have creates for each...
-"""
-def create_fa(rgx, ab):
-    
-    Creates and draws the NFA/DFA using the finite_automata.py file
-    using the given alphabet and regular expression.
-    
-    @type    rgx: string
-    @param   rgx: Regular expression as a string
-    @type    ab:  string
-    @param   ab:  Alphabet of NFA/DFA
-    @rtype:       tuple of finite_automata objects
-    @return:      (dfa, nfa)
-    
-
-    nfa = create_nfa(ab, rgx)
-    dfa = create_dfa(nfa) 
-    return dfa, nfa
-"""
-
 def main():
     logging.basicConfig(level=logging.DEBUG, format='%(levelname)s:%(message)s')
 
@@ -142,9 +83,9 @@ def main():
 
     ab = find_alphabet(args.FILE)
     
-    nfa = create_nfa(ab, args.REGEX)
+    nfa = cnfa.create_nfa(ab, args.REGEX)
 
-    dfa = create_dfa(nfa) 
+    dfa = cdfa.create_dfa(nfa) 
 
 if __name__ == "__main__":
     main()
