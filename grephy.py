@@ -43,9 +43,9 @@ def read_file(fname):
         raise
         sys.exit(1)
 
-def get_alphabet(fname):
+def find_alphabet(fname):
     """
-    Get's the alphabet being used within the 
+    Find's the alphabet being used within the 
     input file
 
     @type    fname: string
@@ -64,7 +64,29 @@ def get_alphabet(fname):
 
     return alphabet
 
-# OLD DON'T NEED?
+def create_dfa(nfa):
+    dfa = fa.finite_automata()
+
+    dfa.set_alphabet(nfa.get_alphabet)
+
+
+def create_nfa(ab, rgx): 
+    # finite_automata(states, alphabet, transitions, init_state, acc_state)
+    nfa = fa.finite_automata()
+
+    nfa.set_alphabet(ab)
+    
+    nfa.add_state('q0', True, False)
+    nfa.add_state('q1', False, True)
+    nfa.add_transition('a', 'q0', 'q1')
+
+    nfa.print_five_tuple() 
+
+    #for s in nfa.states:
+    #    print s.get_name()
+
+    return nfa
+
 def create_fa(rgx, ab):
     """
     Creates and draws the NFA/DFA using the finite_automata.py file
@@ -77,10 +99,9 @@ def create_fa(rgx, ab):
     @rtype:       tuple of finite_automata objects
     @return:      (dfa, nfa)
     """
-    # finite_automata(states, alphabet, transitions, init_state, acc_state)
-    nfa = fa.finite_automata(alphabet=ab)
-    dfa = fa.finite_automata(alphabet=ab)
 
+    nfa = create_nfa(ab, rgx)
+    dfa = create_dfa(nfa) 
     return dfa, nfa
 
 def main():
@@ -98,15 +119,16 @@ def main():
 
     args = parser.parse_args()
 
-    alphabet = get_alphabet(args.FILE)
+    alphabet = find_alphabet(args.FILE)
     
-    #dfa, nfa = create_fa(args.REGEX, alphabet)
+    dfa, nfa = create_fa(args.REGEX, alphabet)
     
-    nfa = fa.finite_automata()
-    dfa = fa.finite_automata()
+
+    #print("DFA Alphabet:", dfa.get_alphabet())
+    #print("NFA Alphabet:", nfa.get_alphabet())
+
     
-    dfa.set_alphabet(alphabet)
-    print(dfa.get_alphabet())
+
     """
     Add print functions to finite_automata
 
