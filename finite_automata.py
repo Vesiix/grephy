@@ -64,14 +64,24 @@ class finite_automata:
     #    print 'remove', state_name
     
     def add_transition(self, name, source, target):
+        """
+        Description:
+
+        @type  name     string
+        @param name     Character(s) to transition on
+        @type  source   state
+        @param source   State of source of transition
+        @type  target   state
+        @param target   State of target of transition
+        """
         # Check if source and target are actual states
         val_src = False
         val_tar = False
         for s in self.states:
-            if s.get_name() == source:
+            if s.get_name() == source.get_name():
                 src = s
                 val_src = True
-            if s.get_name() == target:
+            if s.get_name() == target.get_name():
                 tar = s
                 val_tar = True
 
@@ -88,7 +98,13 @@ class finite_automata:
         # change state status is_acc = False
         # rem from list of acc_states
    #     print 'remove', state
-    
+
+    def get_state(self, name):
+        # returns the state obj with state.name == name
+        for s in self.states:
+            if s.get_name() == name:
+                return s
+
     def get_states(self):
         # returns a string of states
         return self.states
