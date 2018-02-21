@@ -61,9 +61,7 @@ def find_alphabet(fname):
         for c in line:
             if c not in alphabet:
                 alphabet += c
-
-    logging.debug("Alphabet: " + repr(alphabet))
-
+    
     return alphabet
 
 def main():
