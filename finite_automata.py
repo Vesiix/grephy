@@ -52,35 +52,29 @@ class finite_automata:
         new_state = State(name, is_init, is_acc)
         self.states.append(new_state)
 
-    def rem_state(self, state_name):
-        print 'remove', state_name
+    #def rem_state(self, state_name):
+    #    print 'remove', state_name
     
     def add_transition(self, name, source, target):
         new_edge = Edge(name, source, target)
         self.transitions.append(new_edge)
 
-    def rem_transition(self, edge_name):
-        print 'remove', edge_name
+    #def rem_transition(self, edge_name):
+    #     print 'remove', edge_name
 
-    def add_acc_state(self, state):
-        # go through list of states
-        # change state status is_acc = True
-        # add to list of acc_states
-        self.acc_states.append(state)
-    
-    def rem_acc_state(self, state):
+    #def rem_acc_state(self, state):
         # go through list of states
         # change state status is_acc = False
         # rem from list of acc_states
-        print 'remove', state
+   #     print 'remove', state
     
     def get_states(self):
         # returns a string of states
-        return ''
+        return self.states
 
     def get_transitions(self):
         # returns list of transitions
-        return []
+        return self.transitions
 
     def get_init(self):
         # returns initial state
@@ -88,15 +82,23 @@ class finite_automata:
 
     def get_acc_state(self):
         # returns list of accepting states
-        return []
+        return self.acc_state
 
     def print_transitions(self):
         # returns a string of a list of transitions
-        return ''
+        t = []
+        for t in self.transitions:
+            t.append('(' + t.get_source() + ',' + t.get_name() + ') = ' +t.get_target())
+                    
+        return t
 
     def print_acc_states(self):
         # returns a string of a list of accepting states
-        return ''
+        a = []
+        for a in self.acc_state:
+            a.append(acc_state.get_name())
+
+        return a
 
     def print_five_tuple(self):
         print "States:"
