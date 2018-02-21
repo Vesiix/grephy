@@ -8,7 +8,10 @@ Description
 
 @author Jesse Opitz
 """
+# Python Libraries
+import re
 
+# Custom imports
 import finite_automata as fa
 
 def create_nfa(ab, rgx):
@@ -22,18 +25,18 @@ def create_nfa(ab, rgx):
     nfa.add_state('q' + str(state_num), True, False)
 
     state_num += 1
-
-    # If simple regex with no |'s, *'s, or groupings
-    p = 0
-    while p < len(rgx):
-        if p == len(rgx)-1:
-            nfa.add_state('q' + str(state_num), False, True)
-        else:
-            nfa.add_state('q' + str(state_num), False, False)
-        # TODO: Source and target of transition should be a legit state, not string
-        nfa.add_transition(rgx[p], 'q' + str(state_num-1), 'q' + str(state_num))
-        state_num += 1
-        p += 1
+    if re.match('[a-z]*', rgx):
+        # If simple regex with no |'s, *'s, or groupings
+        p = 0
+        while p < len(rgx):
+            if p == len(rgx)-1:
+                nfa.add_state('q' + str(state_num), False, True)
+            else:
+                nfa.add_state('q' + str(state_num), False, False)
+            # TODO: Source and target of transition should be a legit state, not string
+            nfa.add_transition(rgx[p], 'q' + str(state_num-1), 'q' + str(state_num))
+            state_num += 1
+            p += 1
 
     #split_on_or = rgx.split('|')
 
