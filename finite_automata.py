@@ -120,7 +120,7 @@ class finite_automata:
         print "States:"
         for s in self.states:
             print '-->', s.get_name()
-        print "Alphabet:", self.get_alphabet()
+        print "Alphabet:\n-->", self.get_alphabet()
         print "Transitions:"
         for t in self.transitions:
             print '-->(' + t.get_source().get_name() + ',' + t.get_name() + ') = ' +t.get_target().get_name()
