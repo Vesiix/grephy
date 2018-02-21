@@ -20,30 +20,46 @@ def create_nfa(ab, rgx):
 
     nfa.set_alphabet(ab)
 
-    state_num = 0
+    nfa.add_state('q0', True, False)
 
-    nfa.add_state('q' + str(state_num), True, False)
-
-    state_num += 1
-    if re.match('[a-z]*', rgx):
-        # If simple regex with no |'s, *'s, or groupings
-        p = 0
-        while p < len(rgx):
-            if p == len(rgx)-1:
-                nfa.add_state('q' + str(state_num), False, True)
-            else:
-                nfa.add_state('q' + str(state_num), False, False)
-            # TODO: Source and target of transition should be a legit state, not string
-            nfa.add_transition(rgx[p], 'q' + str(state_num-1), 'q' + str(state_num))
-            state_num += 1
-            p += 1
-
-    #split_on_or = rgx.split('|')
-
-    #nfa.add_state('q1', False, True)
-    #nfa.add_transition('r', 'q0', 'q1')
-
+    parse_rgx(rgx, nfa)
+    
     print "NFA:"
+
     nfa.print_five_tuple()
 
     return nfa
+
+def simple_rgx(rgx, nfa):
+    p = 0
+
+    if p == len(rgx)-1:
+        nfa.add_state('q' + str(nfa.get_next_state()), False, True)
+    else:
+        nfa.add_state('q' + str(nfa.get_next_state()), False, False)
+
+    nfa.add_transition(rgx[p], nfa.get_state('q0'), nfa.get_state('q' + str(nfa.get_next_state()-1)))
+    
+    p += 1
+
+    while p < len(rgx):
+        prev_state = nfa.get_state('q' + str(nfa.get_next_state()-1))
+
+        if p == len(rgx)-1:
+            nfa.add_state('q' + str(nfa.get_next_state()), False, True)
+        else:
+            nfa.add_state('q' + str(nfa.get_next_state()), False, False)
+
+        nfa.add_transition(rgx[p], prev_state, nfa.get_state('q' + str(nfa.get_next_state()-1)))
+        p += 1
+
+def parse_rgx(rgx, nfa):
+    if re.match('^[a-zA-Z0-9]*$', rgx):
+        simple_rgx(rgx, nfa)
+    else:
+        # simple regex with |'s
+        if re.match('^([a-zA-Z0-9]*\|[a-zA-Z0-9]*)*$', rgx):
+            split_rgx = rgx.split('|')
+            for s in split_rgx:
+                simple_rgx(s, nfa)
+
