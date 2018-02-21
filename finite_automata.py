@@ -56,7 +56,23 @@ class finite_automata:
     #    print 'remove', state_name
     
     def add_transition(self, name, source, target):
-        new_edge = Edge(name, source, target)
+        # TODO: Verify source and target exist
+        # TODO: Source and target should be actual states
+        #   not just a string of their name
+
+        # Check if source and target are actual states
+        val_src = False
+        val_tar = False
+        for s in self.states:
+            if s.get_name() == source:
+                src = s
+                val_src = True
+            if s.get_name() == target:
+                tar = s
+                val_tar = True
+
+        if val_src and val_tar:
+            new_edge = Edge(name, src, tar)
         self.transitions.append(new_edge)
 
     #def rem_transition(self, edge_name):
@@ -88,7 +104,7 @@ class finite_automata:
         # returns a string of a list of transitions
         t = []
         for t in self.transitions:
-            t.append('(' + t.get_source() + ',' + t.get_name() + ') = ' +t.get_target())
+            t.append('(' + t.get_source().get_name() + ',' + t.get_name() + ') = ' +t.get_target().get_name())
                     
         return t
 
@@ -107,7 +123,7 @@ class finite_automata:
         print "Alphabet:", self.get_alphabet()
         print "Transitions:"
         for t in self.transitions:
-            print '-->(' + t.get_source() + ',' + t.get_name() + ') = ' +t.get_target()
+            print '-->(' + t.get_source().get_name() + ',' + t.get_name() + ') = ' +t.get_target().get_name()
         print "Initial State:"
         for s in self.states:
             if s.get_init():
