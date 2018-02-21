@@ -21,6 +21,7 @@ class finite_automata:
     @type   transitions: list of type edge
     @type   init_state:  string
     @type   acc_state:   list of type state
+    @type   next_state:  int
     """
     def __init__(self):
         # List of states
@@ -37,10 +38,16 @@ class finite_automata:
 
         # List of accepting states
         self.acc_states = []
-    
+
+        # Value of next available state
+        self.next_state = 0
+
     def draw(outfile):
         print 'draw finite automata'
-    
+
+    def get_next_state(self):
+        return self.next_state
+
     def set_alphabet(self, ab):
         self.alphabet = ab
 
@@ -51,6 +58,7 @@ class finite_automata:
     def add_state(self, name, is_init, is_acc):
         new_state = State(name, is_init, is_acc)
         self.states.append(new_state)
+        self.next_state += 1
 
     #def rem_state(self, state_name):
     #    print 'remove', state_name
@@ -69,7 +77,8 @@ class finite_automata:
 
         if val_src and val_tar:
             new_edge = Edge(name, src, tar)
-        self.transitions.append(new_edge)
+            self.transitions.append(new_edge)
+        #TODO: Add an else here, log an error, stop sys
 
     #def rem_transition(self, edge_name):
     #     print 'remove', edge_name
