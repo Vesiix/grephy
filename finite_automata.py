@@ -56,10 +56,6 @@ class finite_automata:
     #    print 'remove', state_name
     
     def add_transition(self, name, source, target):
-        # TODO: Verify source and target exist
-        # TODO: Source and target should be actual states
-        #   not just a string of their name
-
         # Check if source and target are actual states
         val_src = False
         val_tar = False
