@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-'''
+"""
 grephy.py
 
 Usage:
@@ -14,15 +14,28 @@ Description:
 @author Jesse Opitz
 
 Due Date: 05/07/18
-'''
-
+"""
+# Python libraries
 import argparse, logging, sys
 
+# Custom python files
+import finite_automata as fa
+import create_nfa as cnfa
+import create_dfa as cdfa
+import state, edge
+
 def read_file(fname):
+    """
+    Reads data inside a file.
+
+    @type    fname: string
+    @param   fname: Name of the file to read
+    @rtype:         string
+    @return:        Data within the file
+    """
     try:
         with open(fname, 'r') as f:
             data = f.read();
-
         return data
     except IOError as e:
         logging.critical("FILE['{2}'] I/O error({0}): {1}".format(e.errno, e.strerror, fname))
@@ -32,16 +45,23 @@ def read_file(fname):
         raise
         sys.exit(1)
 
-def get_alphabet(fname):
+def find_alphabet(fname):
+    """
+    Find's the alphabet being used within the 
+    input file
+
+    @type    fname: string
+    @param   fname: Name of the input file.
+    @rtype:         string
+    @return:        The alphabet to being used in the file.
+    """
     alphabet = ''
     data = read_file(fname)
     for line in data:
         for c in line:
             if c not in alphabet:
                 alphabet += c
-
-    logging.debug("Alphabet: " + repr(alphabet))
-
+    
     return alphabet
 
 def main():
@@ -53,14 +73,17 @@ def main():
     
     parser.add_argument('-d', '--DFA-FILE', nargs=1, help='Output file for DFA')
 
-    #parser.add_argument('REGEX', type=str, help='Regular expression file')
+    parser.add_argument('REGEX', type=str, help='Regular expression file')
     
     parser.add_argument('FILE', type=str, help='Input file')
 
     args = parser.parse_args()
 
-    alphabet = get_alphabet(args.FILE)
+    ab = find_alphabet(args.FILE)
+    
+    nfa = cnfa.create_nfa(ab, args.REGEX)
 
+    dfa = cdfa.create_dfa(nfa) 
 
 if __name__ == "__main__":
     main()
