@@ -45,7 +45,11 @@ def read_file(fname):
         raise
         sys.exit(1)
 
-def find_alphabet(fname):
+
+#!Incorrect - Need to create a different function!#
+#!Get alphabet from regex not from file!#
+
+#def find_alphabet(fname):
     """
     Find's the alphabet being used within the 
     input file
@@ -55,6 +59,7 @@ def find_alphabet(fname):
     @rtype:         string
     @return:        The alphabet to being used in the file.
     """
+    """
     alphabet = ''
     data = read_file(fname)
     for line in data:
@@ -63,6 +68,8 @@ def find_alphabet(fname):
                 alphabet += c
     
     return alphabet
+    """
+
 
 def main():
     logging.basicConfig(level=logging.DEBUG, format='%(levelname)s:%(message)s')
@@ -79,9 +86,7 @@ def main():
 
     args = parser.parse_args()
 
-    ab = find_alphabet(args.FILE)
-    
-    nfa = cnfa.create_nfa(ab, args.REGEX)
+    nfa = cnfa.create_nfa(args.REGEX)
 
     dfa = cdfa.create_dfa(nfa) 
 
