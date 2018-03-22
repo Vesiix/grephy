@@ -138,19 +138,19 @@ class finite_automata:
         return a
 
     def print_five_tuple(self):
-        print "States:"
+        print "-> States:"
         for s in self.states:
             print '-->', s.get_name()
-        print "Alphabet:\n-->", self.get_alphabet()
-        print "Transitions:"
+        print "-> Alphabet:\n-->", self.get_alphabet()
+        print "-> Transitions:"
         for t in self.transitions:
             print '-->(' + t.get_source().get_name() + ',' + t.get_name() + ') = ' +t.get_target().get_name()
-        print "Initial State:"
+        print "-> Initial State:"
         for s in self.states:
             if s.get_init():
                 print '-->', s.get_name()
                 pass
-        print "Accepting States:"
+        print "-> Accepting States:"
         for s in self.states:
             if s.get_acc():
                 print '-->', s.get_name()
