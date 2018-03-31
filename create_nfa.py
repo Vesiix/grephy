@@ -4,29 +4,29 @@
 create_nfa.py
 
 Description
-  Creates an NFA from an alphabet and regular expression.
+  Creates an NFA from a regular expression.
 
 @author Jesse Opitz
 """
 # Python Libraries
-import re
+import re, logging
 
 # Custom imports
 import finite_automata as fa
 
-def create_nfa(ab, rgx):
+def create_nfa(rgx):
     # finite_automata(states, alphabet, transitions, init_state, acc_state)
     nfa = fa.finite_automata()
-
-    nfa.set_alphabet(ab)
 
     nfa.add_state('q0', True, False)
 
     parse_rgx(rgx, nfa)
     
-    print "NFA:"
-
-    nfa.print_five_tuple()
+    logging.debug("NFA:")
+    
+    print 'Here'
+    print logging.getLogger(__name__).getEffectiveLevel()
+    logging.debug(nfa.print_five_tuple())
 
     return nfa
 
