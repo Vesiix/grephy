@@ -139,8 +139,8 @@ def group_RE(rgx, nfa):
 
 def any_RE(rgx, nfa):
     logging.debug("In any:" + rgx)
-    aToz = 'abcdefghijklmnopqrstuvwxyz'
-    for l in aToz:
+    val_chars = 'abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+    for l in val_chars:
         if l not in nfa.get_alphabet():
             nfa.add_to_ab(l)
     rgx = next(rgx)
