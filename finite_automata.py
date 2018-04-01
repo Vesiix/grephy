@@ -55,6 +55,9 @@ class finite_automata:
         # returns string of alphabet
         return repr(self.alphabet)
 
+    def add_to_ab(self, s):
+        self.alphabet = self.alphabet + s
+
     def add_state(self, name, is_init, is_acc):
         new_state = State(name, is_init, is_acc)
         self.states.append(new_state)

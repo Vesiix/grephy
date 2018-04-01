@@ -15,7 +15,6 @@ import re, sys, logging
 import finite_automata as fa
 
 def create_nfa(rgx):
-    # finite_automata(states, alphabet, transitions, init_state, acc_state)
     nfa = fa.finite_automata()
 
     nfa.add_state('q0', True, False)
@@ -157,6 +156,7 @@ def char_RE(rgx, nfa):
     char_patt = re.compile("[a-zA-Z0-9]")
     if len(rgx) > 0:
         if char_patt.match(rgx[0]):
+            nfa.add_to_ab(rgx[0])
             rgx = next(rgx)
         else:
             logging.critical("Error in character parse. Invalid character")
