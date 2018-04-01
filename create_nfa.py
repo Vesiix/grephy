@@ -57,7 +57,7 @@ def union_RE(rgx, nfa):
 def simple_RE(rgx, nfa):
     logging.debug("In simple:" + rgx)
     #simple_first_set = re.compile("[\*\+\(\.\$a-zA-Z0-9\\\[]") 
-    simple_first_set = re.compile("[a-zA-Z0-9]")
+    simple_first_set = re.compile("[\*\+\.\(\$\[a-zA-Z0-9]")
     # HOW DO YOU DIFFERENTIATE THESE???
     if len(rgx) > 0:
         if simple_first_set.match(rgx[0]):
@@ -139,6 +139,10 @@ def group_RE(rgx, nfa):
 
 def any_RE(rgx, nfa):
     logging.debug("In any:" + rgx)
+    aToz = 'abcdefghijklmnopqrstuvwxyz'
+    for l in aToz:
+        if l not in nfa.get_alphabet():
+            nfa.add_to_ab(l)
     rgx = next(rgx)
 
     logging.debug("Out any:" + rgx)
