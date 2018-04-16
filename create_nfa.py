@@ -75,10 +75,14 @@ def simple_RE(rgx, nfa, curr_state):
     simple_first_set = re.compile("[\*\+\.\(\$\[\\a-zA-Z0-9]")
     # HOW DO YOU DIFFERENTIATE THESE???
     if len(rgx) > 0:
-        if simple_first_set.match(rgx[0]):
-            rgx, nfa = basic_RE(rgx, nfa, curr_state)
-        else:
+        rgx, nfa = basic_RE(rgx, nfa, curr_state)
+        if len(rgx) > 0:
             rgx, nfa = concat_RE(rgx, nfa, curr_state)
+        
+        #if simple_first_set.match(rgx[0]):
+        #    rgx, nfa = basic_RE(rgx, nfa, curr_state)
+        #else:
+        #    rgx, nfa = concat_RE(rgx, nfa, curr_state)
  
     logging.debug("Out simple:" + rgx)
 
@@ -234,8 +238,9 @@ def set_items_RE(rgx, nfa, curr_state):
     logging.debug("In set_items:" + rgx)
     rgx, nfa = set_item_RE(rgx, nfa, curr_state)
 
-    rgx, nfa = set_item_RE(rgx, nfa, curr_state)
-    rgx, nfa = set_items_RE(rgx, nfa, curr_state)
+    # How do I know to go to set_items or not?
+    #rgx, nfa = set_item_RE(rgx, nfa, curr_state)
+    #rgx, nfa = set_items_RE(rgx, nfa, curr_state)
 
     logging.debug("Out set_items:" + rgx)
 
