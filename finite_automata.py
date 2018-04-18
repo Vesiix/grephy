@@ -55,6 +55,9 @@ class finite_automata:
         # returns string of alphabet
         return repr(self.alphabet)
 
+    def add_to_ab(self, s):
+        self.alphabet = self.alphabet + s
+
     def add_state(self, name, is_init, is_acc):
         new_state = State(name, is_init, is_acc)
         self.states.append(new_state)
@@ -78,10 +81,11 @@ class finite_automata:
         val_src = False
         val_tar = False
         for s in self.states:
-            if s.get_name() == source.get_name():
+            # Problem: Source and target should be states, not just strings
+            if s.get_name() == source:
                 src = s
                 val_src = True
-            if s.get_name() == target.get_name():
+            if s.get_name() == target:
                 tar = s
                 val_tar = True
 
@@ -138,19 +142,19 @@ class finite_automata:
         return a
 
     def print_five_tuple(self):
-        print "States:"
+        print "-> States:"
         for s in self.states:
             print '-->', s.get_name()
-        print "Alphabet:\n-->", self.get_alphabet()
-        print "Transitions:"
+        print "-> Alphabet:\n-->", self.get_alphabet()
+        print "-> Transitions:"
         for t in self.transitions:
             print '-->(' + t.get_source().get_name() + ',' + t.get_name() + ') = ' +t.get_target().get_name()
-        print "Initial State:"
+        print "-> Initial State:"
         for s in self.states:
             if s.get_init():
                 print '-->', s.get_name()
                 pass
-        print "Accepting States:"
+        print "-> Accepting States:"
         for s in self.states:
             if s.get_acc():
                 print '-->', s.get_name()
