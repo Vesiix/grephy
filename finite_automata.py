@@ -81,10 +81,11 @@ class finite_automata:
         val_src = False
         val_tar = False
         for s in self.states:
-            if s.get_name() == source.get_name():
+            # Problem: Source and target should be states, not just strings
+            if s.get_name() == source:
                 src = s
                 val_src = True
-            if s.get_name() == target.get_name():
+            if s.get_name() == target:
                 tar = s
                 val_tar = True
 
