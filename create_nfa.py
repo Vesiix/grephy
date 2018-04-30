@@ -13,7 +13,7 @@ import re, sys, logging
 
 # Custom imports
 import finite_automata as fa
-import parse_nfa
+import parse_rx_to_nfa
 
 def create_nfa(rgx):
     nfa = fa.finite_automata()
@@ -24,7 +24,7 @@ def create_nfa(rgx):
     p = 0
     curr_state = 0
 
-    nfa = parse_nfa.parse_RE(rgx, nfa, p, curr_state)
+    nfa = parse_rx_to_nfa.parse_RE(rgx, nfa, p, curr_state)
     
     #rgx, nfa, curr_state = RE(rgx, nfa, curr_state)
     
