@@ -125,6 +125,11 @@ class finite_automata:
         # returns list of accepting states
         return self.acc_state
 
+    def set_acc_state(self, name):
+        for s in self.states:
+            if s.get_name() == name:
+                s.set_acc(True)
+
     def print_transitions(self):
         # returns a string of a list of transitions
         t = []

@@ -13,6 +13,7 @@ import re, sys, logging
 
 # Custom imports
 import finite_automata as fa
+import parse_nfa
 
 def create_nfa(rgx):
     nfa = fa.finite_automata()
@@ -20,14 +21,18 @@ def create_nfa(rgx):
     nfa.add_state('q0', True, False)
     logging.debug("create_nfa")
 
+    p = 0
     curr_state = 0
-    rgx, nfa, curr_state = RE(rgx, nfa, curr_state)
+
+    nfa = parse_nfa.parse_RE(rgx, nfa, p, curr_state)
     
-    if len(rgx) == 0:
-        logging.debug("Parse completed successfully.")
-    else:
-        logging.critical("Unable to parse.")
-        sys.exit(1)
+    #rgx, nfa, curr_state = RE(rgx, nfa, curr_state)
+    
+    #if len(rgx) == 0:
+    #    logging.debug("Parse completed successfully.")
+    #else:
+    #    logging.critical("Unable to parse.")
+    #    sys.exit(1)
 
     logging.debug("NFA:")
     
@@ -36,6 +41,7 @@ def create_nfa(rgx):
 
     return nfa
 
+'''
 # Removes the first letter of a string
 def next(s):
     return s[1:]
@@ -292,3 +298,4 @@ def RE(rgx, nfa, curr_state):
 
     logging.debug("Out RE:" + rgx)
     return rgx, nfa, curr_state
+'''
