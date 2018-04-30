@@ -126,6 +126,7 @@ class finite_automata:
         return self.acc_state
 
     def set_acc_state(self, name):
+        print "here"
         for s in self.states:
             if s.get_name() == name:
                 s.set_acc(True)
