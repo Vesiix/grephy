@@ -23,6 +23,7 @@ import finite_automata as fa
 import create_nfa as cnfa
 import create_dfa as cdfa
 import state, edge
+import draw_fa
 
 def read_file(fname):
     """
@@ -45,32 +46,6 @@ def read_file(fname):
         raise
         sys.exit(1)
 
-
-#!Incorrect - Need to create a different function!#
-#!Get alphabet from regex not from file!#
-
-#def find_alphabet(fname):
-    """
-    Find's the alphabet being used within the 
-    input file
-
-    @type    fname: string
-    @param   fname: Name of the input file.
-    @rtype:         string
-    @return:        The alphabet to being used in the file.
-    """
-    """
-    alphabet = ''
-    data = read_file(fname)
-    for line in data:
-        for c in line:
-            if c not in alphabet:
-                alphabet += c
-    
-    return alphabet
-    """
-
-
 def main():
     logging.basicConfig(level=logging.DEBUG, format='%(levelname)s:%(message)s')
 
@@ -88,7 +63,9 @@ def main():
 
     nfa = cnfa.create_nfa(args.REGEX)
 
-    dfa = cdfa.create_dfa(nfa) 
+    dfa = cdfa.create_dfa(nfa)
+
+    
 
 if __name__ == "__main__":
     main()
