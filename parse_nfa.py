@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 
+# TODO: Complete regex for lists and groups
+
 import re, sys, logging
 
 # rx is regex
