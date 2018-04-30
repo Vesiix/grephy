@@ -8,10 +8,24 @@ Description:
 @author: Jesse Opitz
 
 """
-import graphviz
+from graphviz import Digraph
 
-def draw_init(state):
-    print 'draw_init'    
+def draw(fa):
+    dot = Digraph()
+    dot.attr(rankdir='LR', size='8,5')    
+    # Creates state as nodes
+    for s in fa.get_states():
+        if s.get_acc() == True:
+            dot.attr('node', shape='doublecircle')
+            dot.node(s.get_name(), s.get_name())
+        else:
+            dot.attr('node', shape='circle')
+            dot.node(s.get_name(), s.get_name())
 
-def dot_draw(fa):
-    print 'dot_draw'
+    # Creates edges for transitions
+    for t in fa.get_transitions():
+        dot.edge(t.get_source().get_name(), t.get_target().get_name(), label=(t.get_name()))
+
+
+    return dot
+

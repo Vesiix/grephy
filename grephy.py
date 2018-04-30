@@ -17,6 +17,7 @@ Due Date: 05/07/18
 """
 # Python libraries
 import argparse, logging, sys
+from graphviz import Digraph
 
 # Custom python files
 import finite_automata as fa
@@ -65,7 +66,11 @@ def main():
 
     dfa = cdfa.create_dfa(nfa)
 
+    nfa_dot = draw_fa.draw(nfa)    
     
+    nfa_dot.format = 'dot'
+
+    nfa_dot.save(filename="out.dot")
 
 if __name__ == "__main__":
     main()
