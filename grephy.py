@@ -68,7 +68,9 @@ def main():
 
     nfa_dot = draw_fa.draw(nfa)    
     
-    nfa_dot.format = 'dot'
+    #nfa_dot.format = 'dot'
+
+    nfa_dot.render('trial.gv', view=True)
 
     nfa_dot.save(filename="out.dot")
 
