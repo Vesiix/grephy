@@ -3,7 +3,7 @@ A python2.7 grep utility that searches files for regular expression pattern matc
 
 # Usage
 ```
-usage: grephy.py [-h] [-n NFA_FILE] [-d DFA_FILE] REGEX FILE
+usage: grephy.py [-h] [-n NFA_FILE] [-d DFA_FILE] [-p] REGEX FILE
 
 Searches files for regular expression pattern matches.
 
@@ -17,4 +17,5 @@ optional arguments:
                         Output file for NFA
   -d DFA_FILE, --DFA-FILE DFA_FILE
                         Output file for DFA
+  -p, --preview         Opens a pdf view of DFA and NFA
 ```
