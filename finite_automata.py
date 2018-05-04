@@ -105,7 +105,6 @@ class finite_automata:
 
         for t in self.transitions:
             if t.get_source().get_name() == src:
-                #print 't', t.get_source().get_name()
                 poss_trans.append(t)
 
         return poss_trans

@@ -26,17 +26,9 @@ def create_nfa(rgx):
 
     nfa = parse_rx_to_nfa.parse_RE(rgx, nfa, p, curr_state)
     
-    #rgx, nfa, curr_state = RE(rgx, nfa, curr_state)
-    
-    #if len(rgx) == 0:
-    #    logging.debug("Parse completed successfully.")
-    #else:
-    #    logging.critical("Unable to parse.")
-    #    sys.exit(1)
-
     logging.debug("NFA:")
     
-    #print logging.getLogger(__name__).getEffectiveLevel()
-    logging.debug(nfa.print_five_tuple())
+    if logging.getLogger(__name__).getEffectiveLevel() == 10:
+        logging.debug(nfa.print_five_tuple())
 
     return nfa

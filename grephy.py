@@ -49,13 +49,15 @@ def read_file(fname):
         sys.exit(1)
 
 def main():
-    logging.basicConfig(level=logging.DEBUG, format='%(levelname)s:%(message)s')
+    logging.basicConfig(level=logging.CRITICAL, format='%(levelname)s:%(message)s')
 
     parser = argparse.ArgumentParser(description='Searches files for regular expression pattern matches.')
     
     parser.add_argument('-n', '--NFA-FILE', nargs=1, help='Output file for NFA')
     
     parser.add_argument('-d', '--DFA-FILE', nargs=1, help='Output file for DFA')
+
+    parser.add_argument('-p', '--preview', action="store_true", help='Opens a pdf view of DFA and NFA')
 
     parser.add_argument('REGEX', type=str, help='Regular expression file')
     
@@ -69,11 +71,15 @@ def main():
 
     nfa_dot = draw_fa.draw(nfa)    
     
-    # Uncomment when merge with master
-    #nfa_dot.render('trial.gv', view=True)
-    #nfa_dot.save(filename="out.dot")
+    if args.preview:
+        nfa_dot.render('nfa.dot', view=True)
+    elif not args.preview:
+        nfa_dot.save('nfa.dot')
 
-    find_match.find_match(nfa, args.FILE)    
+    matches = find_match.find_match(nfa, args.FILE)    
+
+    for m in matches:
+        print m.strip()
 
 if __name__ == "__main__":
     main()
