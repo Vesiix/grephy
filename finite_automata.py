@@ -93,7 +93,6 @@ class finite_automata:
         return self.transitions
     
     def find_src_transitions(self, src):
-        print 'in find', src
         """
         Description:
             Returns all transitions related to a state
@@ -106,10 +105,9 @@ class finite_automata:
 
         for t in self.transitions:
             if t.get_source().get_name() == src:
-                print 't', t.get_source().get_name()
+                #print 't', t.get_source().get_name()
                 poss_trans.append(t)
 
-        print 'Poss trans:', poss_trans
         return poss_trans
 
     def get_state(self, name):
