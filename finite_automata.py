@@ -42,9 +42,6 @@ class finite_automata:
         # Value of next available state
         self.next_state = 0
 
-    def draw(outfile):
-        print 'draw finite automata'
-
     def get_next_state(self):
         return self.next_state
 
@@ -63,9 +60,6 @@ class finite_automata:
         self.states.append(new_state)
         self.next_state += 1
 
-    #def rem_state(self, state_name):
-    #    print 'remove', state_name
-    
     def add_transition(self, name, source, target):
         """
         Description:
@@ -94,14 +88,29 @@ class finite_automata:
             self.transitions.append(new_edge)
         #TODO: Add an else here, log an error, stop sys
 
-    #def rem_transition(self, edge_name):
-    #     print 'remove', edge_name
+    def get_transitions(self):
+        # returns list of transitions
+        return self.transitions
+    
+    def find_src_transitions(self, src):
+        print 'in find', src
+        """
+        Description:
+            Returns all transitions related to a state
 
-    #def rem_acc_state(self, state):
-        # go through list of states
-        # change state status is_acc = False
-        # rem from list of acc_states
-   #     print 'remove', state
+        @type  src     string
+        @param src     Source state name
+        """
+        # list of all transitions out of a source
+        poss_trans = []
+
+        for t in self.transitions:
+            if t.get_source().get_name() == src:
+                print 't', t.get_source().get_name()
+                poss_trans.append(t)
+
+        print 'Poss trans:', poss_trans
+        return poss_trans
 
     def get_state(self, name):
         # returns the state obj with state.name == name
@@ -113,10 +122,6 @@ class finite_automata:
         # returns a string of states
         return self.states
 
-    def get_transitions(self):
-        # returns list of transitions
-        return self.transitions
-
     def get_init(self):
         # returns initial state
         return self.init_state
@@ -126,7 +131,6 @@ class finite_automata:
         return self.acc_state
 
     def set_acc_state(self, name):
-        print "here"
         for s in self.states:
             if s.get_name() == name:
                 s.set_acc(True)

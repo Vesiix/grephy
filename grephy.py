@@ -25,6 +25,7 @@ import create_nfa as cnfa
 import create_dfa as cdfa
 import state, edge
 import draw_fa
+import find_match
 
 def read_file(fname):
     """
@@ -68,11 +69,11 @@ def main():
 
     nfa_dot = draw_fa.draw(nfa)    
     
-    #nfa_dot.format = 'dot'
+    # Uncomment when merge with master
+    #nfa_dot.render('trial.gv', view=True)
+    #nfa_dot.save(filename="out.dot")
 
-    nfa_dot.render('trial.gv', view=True)
-
-    nfa_dot.save(filename="out.dot")
+    find_match.find_match(nfa, args.FILE)    
 
 if __name__ == "__main__":
     main()
