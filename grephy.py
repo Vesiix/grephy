@@ -17,12 +17,15 @@ Due Date: 05/07/18
 """
 # Python libraries
 import argparse, logging, sys
+from graphviz import Digraph
 
 # Custom python files
 import finite_automata as fa
 import create_nfa as cnfa
 import create_dfa as cdfa
 import state, edge
+import draw_fa
+import find_match
 
 def read_file(fname):
     """
@@ -45,40 +48,16 @@ def read_file(fname):
         raise
         sys.exit(1)
 
-
-#!Incorrect - Need to create a different function!#
-#!Get alphabet from regex not from file!#
-
-#def find_alphabet(fname):
-    """
-    Find's the alphabet being used within the 
-    input file
-
-    @type    fname: string
-    @param   fname: Name of the input file.
-    @rtype:         string
-    @return:        The alphabet to being used in the file.
-    """
-    """
-    alphabet = ''
-    data = read_file(fname)
-    for line in data:
-        for c in line:
-            if c not in alphabet:
-                alphabet += c
-    
-    return alphabet
-    """
-
-
 def main():
-    logging.basicConfig(level=logging.DEBUG, format='%(levelname)s:%(message)s')
+    logging.basicConfig(level=logging.CRITICAL, format='%(levelname)s:%(message)s')
 
     parser = argparse.ArgumentParser(description='Searches files for regular expression pattern matches.')
     
     parser.add_argument('-n', '--NFA-FILE', nargs=1, help='Output file for NFA')
     
     parser.add_argument('-d', '--DFA-FILE', nargs=1, help='Output file for DFA')
+
+    parser.add_argument('-p', '--preview', action="store_true", help='Opens a pdf view of DFA and NFA')
 
     parser.add_argument('REGEX', type=str, help='Regular expression file')
     
@@ -88,7 +67,19 @@ def main():
 
     nfa = cnfa.create_nfa(args.REGEX)
 
-    dfa = cdfa.create_dfa(nfa) 
+    dfa = cdfa.create_dfa(nfa)
+
+    nfa_dot = draw_fa.draw(nfa)    
+    
+    if args.preview:
+        nfa_dot.render('nfa.dot', view=True)
+    elif not args.preview:
+        nfa_dot.save('nfa.dot')
+
+    matches = find_match.find_match(nfa, args.FILE)    
+
+    for m in matches:
+        print m.strip()
 
 if __name__ == "__main__":
     main()
