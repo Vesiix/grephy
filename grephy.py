@@ -49,7 +49,7 @@ def read_file(fname):
         sys.exit(1)
 
 def main():
-    logging.basicConfig(level=logging.CRITICAL, format='%(levelname)s:%(message)s')
+    logging.basicConfig(level=logging.DEBUG, format='%(levelname)s:%(message)s')
 
     parser = argparse.ArgumentParser(description='Searches files for regular expression pattern matches.')
     
