@@ -102,14 +102,45 @@ def parse_star(rx, nfa, p, curr_state):
 def parse_plus(rx, nfa, p, curr_state):
     logging.debug("In plus:" + str(p) + " curr_state:" + str(curr_state))
     
-    nfa, p, curr_state = parse_char(rx, nfa, p, curr_state)
+    # Add letter to alphabet
+    nfa.add_to_ab(rx[p])
 
-    nfa, p, curr_state = loop(rx, nfa, p-1, curr_state)
+    # Save start state
+    start_state = curr_state
+
+    # First epsilon transition
+    nfa.add_state('q' + str(nfa.get_next_state()), False, False)
+    nfa.add_transition('Eps', 'q' + str(curr_state), 'q' + str(nfa.get_next_state()-1))
+    curr_state = nfa.get_next_state()-1
+
+    # Save state before character
+    state_before_char = curr_state
+
+    # Character transition
+    nfa.add_state('q' + str(nfa.get_next_state()), False, False)
+    nfa.add_transition(rx[p], 'q' + str(curr_state), 'q' + str(nfa.get_next_state()-1))
+    curr_state = nfa.get_next_state()-1
+
+    # Second Epsilon transition
+    nfa.add_state('q' + str(nfa.get_next_state()), False, True)
+    nfa.add_transition('Eps', 'q' + str(curr_state), 'q' + str(nfa.get_next_state()-1))
+    curr_state = nfa.get_next_state()-1
+
+    # loopback epsilon transitions
+    nfa.add_transition('Eps', 'q' + str(curr_state), 'q' + str(state_before_char))
+
+    # Jump letter and star/plus
+    p = p + 2    
+
+    # OLD
+    #nfa, p, curr_state = parse_char(rx, nfa, p, curr_state)
+    #nfa, p, curr_state = loop(rx, nfa, p-1, curr_state)
     
     logging.debug("Out plus:" + str(p) + " curr_state:" + str(curr_state))
 
     return nfa, p, curr_state
 
+'''
 def loop(rx, nfa, p, curr_state):
     logging.debug("In loop:" + str(p) + " curr_state:" + str(curr_state))
 
@@ -125,3 +156,4 @@ def loop(rx, nfa, p, curr_state):
     logging.debug("Out loop:" + str(p) + " curr_state:" + str(curr_state))
     
     return nfa, p, curr_state
+'''
