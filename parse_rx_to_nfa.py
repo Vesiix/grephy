@@ -132,28 +132,7 @@ def parse_plus(rx, nfa, p, curr_state):
     # Jump letter and star/plus
     p = p + 2    
 
-    # OLD
-    #nfa, p, curr_state = parse_char(rx, nfa, p, curr_state)
-    #nfa, p, curr_state = loop(rx, nfa, p-1, curr_state)
-    
     logging.debug("Out plus:" + str(p) + " curr_state:" + str(curr_state))
 
     return nfa, p, curr_state
 
-'''
-def loop(rx, nfa, p, curr_state):
-    logging.debug("In loop:" + str(p) + " curr_state:" + str(curr_state))
-
-    nfa.add_transition(rx[p], 'q' + str(curr_state), 'q' + str(curr_state))
-    if len(rx) == p+2:
-        # If the star is the last character
-        # -> Make curr_state accepting
-        nfa.set_acc_state('q' + str(curr_state))
-
-    # Jump letter and star/plus
-    p = p + 2 
-
-    logging.debug("Out loop:" + str(p) + " curr_state:" + str(curr_state))
-    
-    return nfa, p, curr_state
-'''
