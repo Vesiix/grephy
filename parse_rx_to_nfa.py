@@ -81,8 +81,8 @@ def parse_RE(rx, nfa, p, curr_state):
                         nfa, p, curr_state = parse_plus(rx, nfa, p, curr_state, square=True, char_list=true_chars)
                         p = p+2
                     else:
-                        # Regular characters
-                        nfa.add_state('q' + str(nfa.get_next_state()), False, True)
+			# Regular characters with something after
+			nfa.add_state('q' + str(nfa.get_next_state()), False, False)
 
                         for char in true_chars:
                             # Add to alphabet and create transition for each character
@@ -93,7 +93,8 @@ def parse_RE(rx, nfa, p, curr_state):
 
                         p += 1
 		else:
-                    nfa.add_state('q' + str(nfa.get_next_state()), False, False)
+                    # Regular with nothing after
+                    nfa.add_state('q' + str(nfa.get_next_state()), False, True)
 
                     for char in true_chars:
                         # Add to alphabet and create transition for each character
@@ -106,7 +107,45 @@ def parse_RE(rx, nfa, p, curr_state):
 
             elif rx[p] == '(':
                 # If it's a group
-                print "("
+                p += 1
+                char_list = ''
+                while rx[p] != ')':
+                    char_list += rx[p]
+                    p += 1
+
+                if p+1 < len(rx):
+                    if rx[p+1] == '*':
+                        # 0 or more
+                        nfa, p, curr_state = parse_star(rx, nfa, p, curr_state, paren=True, char_list=char_list)
+                        p += 2
+                    elif rx[p+1] == '+':
+                        # 1 or more
+                        nfa, p, curr_state = parse_plus(rx, nfa, p, curr_state, paren=True, char_list=char_list)
+                        p += 2
+                    else:
+                        # Regular characters with something after
+                        for char in char_list:
+                            nfa.add_state('q' + str(nfa.get_next_state()), False, False)
+                            nfa.add_to_ab(char)
+                            nfa.add_transition(char, 'q' + str(curr_state), 'q' + str(nfa.get_next_state()-1))
+                            curr_state = nfa.get_next_state()-1
+                        p += 1
+                else:
+                    # Regular with nothing after
+                    c = 0
+                    while c < len(char_list)-1:
+                        nfa.add_state('q' + str(nfa.get_next_state()), False, False)
+                        nfa.add_to_ab(char_list[c])
+                        nfa.add_transition(char_list[c], 'q' + str(curr_state), 'q' + str(nfa.get_next_state()-1))
+                        curr_state = nfa.get_next_state()-1
+                        c += 1
+                        
+                    nfa.add_state('q' + str(nfa.get_next_state()), False, True)
+                    nfa.add_to_ab(char_list[-1])
+                    nfa.add_transition(char_list[c], 'q' + str(curr_state), 'q' + str(nfa.get_next_state()-1))
+                    curr_state = nfa.get_next_state()-1
+
+                    p += 1
 
     return nfa
 
@@ -155,8 +194,8 @@ def parse_star(rx, nfa, p, curr_state, square=False, paren=False, char_list=[]):
         curr_state = nfa.get_next_state()-1
 
     elif paren:
-	nfa.add_state('q' + str(nfa.get_next_state()), False, False)
         for char in char_list:
+	    nfa.add_state('q' + str(nfa.get_next_state()), False, False)
             nfa.add_to_ab(char)
             nfa.add_transition(char, 'q' + str(curr_state), 'q' + str(nfa.get_next_state()-1))
             curr_state = nfa.get_next_state()-1
@@ -212,8 +251,8 @@ def parse_plus(rx, nfa, p, curr_state, square=False, paren=False, char_list=[]):
         curr_state = nfa.get_next_state()-1
 
     elif paren:
-        nfa.add_state('q' + str(nfa.get_next_state()), False, False)
         for char in char_list:
+            nfa.add_state('q' + str(nfa.get_next_state()), False, False)
             nfa.add_to_ab(char)
             nfa.add_transition(char, 'q' + str(curr_state), 'q' + str(nfa.get_next_state()-1))
             curr_state = nfa.get_next_state()-1
