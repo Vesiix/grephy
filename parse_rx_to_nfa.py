@@ -15,7 +15,6 @@ def parse_RE(rx, nfa, p, curr_state):
             parse_RE(x, nfa, 0, 0)
     else:
         while p < len(rx):
-            print rx[p]
             if re.match("[a-zA-Z0-9]", rx[p]):
                 # If it's a character
                 if (p+1) < len(rx):
@@ -44,47 +43,62 @@ def parse_RE(rx, nfa, p, curr_state):
                     char_list += rx[p]
                     p += 1
 
+                if '-' in char_list:
+                    c = 0
+
+                    true_chars = ''
+
+                    while c < len(char_list):
+                        if c+1 < len(char_list):
+                            if char_list[c+1] == '-':
+                                first_char = ord(char_list[c])
+                                second_char = ord(char_list[c+2])
+                                while first_char <= second_char:
+                                    true_chars += chr(first_char)
+                                    first_char += 1
+                                c += 2
+                            else:
+                                true_chars += char_list[c]
+                        else:
+                            true_chars += char_list[c]
+                        c += 1
+                else:
+                    true_chars = char_list
+
                 next_state = nfa.get_next_state()
 
                 if p+1 < len(rx):
                     if rx[p+1] == '*':
                         # 0 or more
-                        print 'star'
+                        nfa, p, curr_state = parse_star(rx, nfa, p, curr_state, square=True, char_list=true_chars)
+                        p = p+2
                     elif rx[p+1] == '+':
                         #1 or more
-                        print 'plus'
+                        nfa, p, curr_state = parse_plus(rx, nfa, p, curr_state, square=True, char_list=true_chars)
+                        p = p+2
                     else:
-                        if '-' in char_list:
-                            # Range
-                            print 'range'
-                        else:
-                            # Just characters
-                            nfa.add_state('q' + str(nfa.get_next_state()), False, False)
+                        print 'reg'
+                        nfa.add_state('q' + str(nfa.get_next_state()), False, True)
 
-                            for char in char_list:
-                                # Add to alphabet and create transition for each character
-                                nfa.add_to_ab(char)
-                                nfa.add_transition(char, 'q' + str(curr_state), 'q' + str(next_state))
-
-                            curr_state = next_state
-
-                            p += 1
-		else:
-		    if '-' in char_list:
-                        # Range
-                        print 'range'
-                    else:
-                        # Just characters
-                        nfa.add_state('q' + str(nfa.get_next_state()), False, False)
-
-                        for char in char_list:
+                        for char in true_chars:
                             # Add to alphabet and create transition for each character
                             nfa.add_to_ab(char)
                             nfa.add_transition(char, 'q' + str(curr_state), 'q' + str(next_state))
-                        
+
                         curr_state = next_state
 
                         p += 1
+		else:
+                    nfa.add_state('q' + str(nfa.get_next_state()), False, False)
+
+                    for char in true_chars:
+                        # Add to alphabet and create transition for each character
+                        nfa.add_to_ab(char)
+                        nfa.add_transition(char, 'q' + str(curr_state), 'q' + str(next_state))
+                    
+                    curr_state = next_state
+
+                    p += 1
 
             elif rx[p] == '(':
                 # If it's a group
@@ -114,11 +128,8 @@ def parse_char(rx, nfa, p, curr_state):
 
     return nfa, p, curr_state
 
-def parse_star(rx, nfa, p, curr_state):
+def parse_star(rx, nfa, p, curr_state, square=False, paren=False, char_list=[]):
     logging.debug("In star:" + str(p) + " curr_state:" + str(curr_state))
-        
-    # Add letter to alphabet
-    nfa.add_to_ab(rx[p])
     
     # Save start state
     start_state = curr_state
@@ -132,15 +143,36 @@ def parse_star(rx, nfa, p, curr_state):
     state_before_char = curr_state
 
     # Character transition
-    nfa.add_state('q' + str(nfa.get_next_state()), False, False)
-    nfa.add_transition(rx[p], 'q' + str(curr_state), 'q' + str(nfa.get_next_state()-1))
-    curr_state = nfa.get_next_state()-1
+    if square:
+        nfa.add_state('q' + str(nfa.get_next_state()), False, False)
+        for char in char_list:
+            nfa.add_to_ab(char)
+            nfa.add_transition(char, 'q' + str(curr_state), 'q' + str(nfa.get_next_state()-1))
+        curr_state = nfa.get_next_state()-1
+
+    elif paren:
+	nfa.add_state('q' + str(nfa.get_next_state()), False, False)
+        for char in char_list:
+            nfa.add_to_ab(char)
+            nfa.add_transition(char, 'q' + str(curr_state), 'q' + str(nfa.get_next_state()-1))
+            curr_state = nfa.get_next_state()-1
+    else:
+        # Add letter to alphabet
+        nfa.add_to_ab(rx[p])
+
+        nfa.add_state('q' + str(nfa.get_next_state()), False, False)
+        nfa.add_transition(rx[p], 'q' + str(curr_state), 'q' + str(nfa.get_next_state()-1))
+        curr_state = nfa.get_next_state()-1
 
     # Second Epsilon transition
-    nfa.add_state('q' + str(nfa.get_next_state()), False, True)
-    nfa.add_transition('Eps', 'q' + str(curr_state), 'q' + str(nfa.get_next_state()-1))
-    curr_state = nfa.get_next_state()-1
+    if p+2 < len(rx):
+        nfa.add_state('q' + str(nfa.get_next_state()), False, False)
+    else:
+        nfa.add_state('q' + str(nfa.get_next_state()), False, True)
     
+    nfa.add_transition('Eps', 'q' + str(curr_state), 'q' + str(nfa.get_next_state()-1))
+    curr_state = nfa.get_next_state()-1 
+
     # loopback epsilon transitions
     nfa.add_transition('Eps', 'q' + str(curr_state), 'q' + str(state_before_char))
     nfa.add_transition('Eps', 'q' + str(start_state), 'q' + str(curr_state))
@@ -149,7 +181,7 @@ def parse_star(rx, nfa, p, curr_state):
 
     return nfa, p, curr_state
 
-def parse_plus(rx, nfa, p, curr_state):
+def parse_plus(rx, nfa, p, curr_state, square=False, paren=False, char_list=[]):
     logging.debug("In plus:" + str(p) + " curr_state:" + str(curr_state))
     
     # Add letter to alphabet
@@ -167,12 +199,31 @@ def parse_plus(rx, nfa, p, curr_state):
     state_before_char = curr_state
 
     # Character transition
-    nfa.add_state('q' + str(nfa.get_next_state()), False, False)
-    nfa.add_transition(rx[p], 'q' + str(curr_state), 'q' + str(nfa.get_next_state()-1))
-    curr_state = nfa.get_next_state()-1
+    if square:
+        nfa.add_state('q' + str(nfa.get_next_state()), False, False)
+        for char in char_list:
+            nfa.add_to_ab(char)
+            nfa.add_transition(char, 'q' + str(curr_state), 'q' + str(nfa.get_next_state()-1))
+
+        curr_state = nfa.get_next_state()-1
+
+    elif paren:
+        nfa.add_state('q' + str(nfa.get_next_state()), False, False)
+        for char in char_list:
+            nfa.add_to_ab(char)
+            nfa.add_transition(char, 'q' + str(curr_state), 'q' + str(nfa.get_next_state()-1))
+            curr_state = nfa.get_next_state()-1
+    else:
+        nfa.add_state('q' + str(nfa.get_next_state()), False, False)
+        nfa.add_transition(rx[p], 'q' + str(curr_state), 'q' + str(nfa.get_next_state()-1))
+        curr_state = nfa.get_next_state()-1
 
     # Second Epsilon transition
-    nfa.add_state('q' + str(nfa.get_next_state()), False, True)
+    if p+2 < len(rx):
+        nfa.add_state('q' + str(nfa.get_next_state()), False, False)
+    else:
+        nfa.add_state('q' + str(nfa.get_next_state()), False, True)
+
     nfa.add_transition('Eps', 'q' + str(curr_state), 'q' + str(nfa.get_next_state()-1))
     curr_state = nfa.get_next_state()-1
 
