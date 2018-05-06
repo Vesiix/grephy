@@ -36,7 +36,11 @@ def parse_RE(rx, nfa, p, curr_state):
                 # If it's a set
 
                 p += 1
-
+                
+                # Grabs all characters between square braces
+                # into char_list. Then, translates any ranges
+                # into usable characters in true_chars and adds
+                # all viable chars into true_chars.
                 char_list = ''
                 
                 while not (rx[p] == ']'):
@@ -73,11 +77,11 @@ def parse_RE(rx, nfa, p, curr_state):
                         nfa, p, curr_state = parse_star(rx, nfa, p, curr_state, square=True, char_list=true_chars)
                         p = p+2
                     elif rx[p+1] == '+':
-                        #1 or more
+                        # 1 or more
                         nfa, p, curr_state = parse_plus(rx, nfa, p, curr_state, square=True, char_list=true_chars)
                         p = p+2
                     else:
-                        print 'reg'
+                        # Regular characters
                         nfa.add_state('q' + str(nfa.get_next_state()), False, True)
 
                         for char in true_chars:
