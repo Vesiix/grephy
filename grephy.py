@@ -67,19 +67,23 @@ def main():
 
     nfa = cnfa.create_nfa(args.REGEX)
 
-    dfa = cdfa.create_dfa(nfa)
+    #dfa = cdfa.create_dfa(nfa)
 
-    nfa_dot = draw_fa.draw(nfa)    
-    
+    nfa_dot = draw_fa.draw(nfa)
+    #dfa_dot = draw_fa.draw(dfa)
+
     if args.preview:
         nfa_dot.render('nfa.dot', view=True)
+        #dfa_dot.render('dfa.dot', view=True)
     elif not args.preview:
         nfa_dot.save('nfa.dot')
+        #dfa_dot.save('dfa.dot')
 
-    matches = find_match.find_match(nfa, args.FILE)    
+    #TODO: Fix bug where matches first letter = matches line
+    #matches = find_match.find_match(dfa, args.FILE)
 
-    for m in matches:
-        print m.strip()
+    #for m in matches:
+    #    print m.strip()
 
 if __name__ == "__main__":
     main()
