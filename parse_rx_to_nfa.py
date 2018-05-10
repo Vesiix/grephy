@@ -25,10 +25,15 @@ def parse_RE(rx, nfa, p, curr_state):
                         nfa, p, curr_state = parse_star(rx, nfa, p, curr_state)
                         # Jump letter and star/plus
                         p = p + 2
+                        if p == len(rx):
+                            nfa.set_acc_state('q' + str(curr_state))
+
                     elif rx[p+1] == '+':
                         nfa, p, curr_state = parse_plus(rx, nfa, p, curr_state)
                         # Jump letter and star/plus
                         p = p + 2
+                        if p == len(rx):
+                            nfa.set_acc_state('q' + str(curr_state))
                 else:
                     # This is fine, doesn't have to check for * or + when its last character
                     nfa, p, curr_state = parse_char(rx, nfa, p, curr_state)
@@ -76,10 +81,12 @@ def parse_RE(rx, nfa, p, curr_state):
                         # 0 or more
                         nfa, p, curr_state = parse_star(rx, nfa, p, curr_state, square=True, char_list=true_chars)
                         p = p+2
+                        
                     elif rx[p+1] == '+':
                         # 1 or more
                         nfa, p, curr_state = parse_plus(rx, nfa, p, curr_state, square=True, char_list=true_chars)
                         p = p+2
+                        
                     else:
 			# Regular characters with something after
 			nfa.add_state('q' + str(nfa.get_next_state()), False, False)
@@ -92,6 +99,7 @@ def parse_RE(rx, nfa, p, curr_state):
                         curr_state = next_state
 
                         p += 1
+                        
 		else:
                     # Regular with nothing after
                     nfa.add_state('q' + str(nfa.get_next_state()), False, True)
@@ -146,6 +154,9 @@ def parse_RE(rx, nfa, p, curr_state):
                     curr_state = nfa.get_next_state()-1
 
                     p += 1
+                
+            if p == len(rx):
+                nfa.set_acc_state('q' + str(curr_state))
 
     return nfa
 
@@ -173,53 +184,38 @@ def parse_char(rx, nfa, p, curr_state):
 
 def parse_star(rx, nfa, p, curr_state, square=False, paren=False, char_list=[]):
     logging.debug("In star:" + str(p) + " curr_state:" + str(curr_state))
-    
-    # Save start state
-    start_state = curr_state
 
-    # First epsilon transition
-    nfa.add_state('q' + str(nfa.get_next_state()), False, False)
-    nfa.add_transition('Eps', 'q' + str(curr_state), 'q' + str(nfa.get_next_state()-1))
-    curr_state = nfa.get_next_state()-1
-
-    # Save state before character
-    state_before_char = curr_state
-
-    # Character transition
     if square:
-        nfa.add_state('q' + str(nfa.get_next_state()), False, False)
-        for char in char_list:
-            nfa.add_to_ab(char)
-            nfa.add_transition(char, 'q' + str(curr_state), 'q' + str(nfa.get_next_state()-1))
-        curr_state = nfa.get_next_state()-1
+        for c in char_list:
+            # Add letter to alphabet
+            nfa.add_to_ab(c)
+
+            nfa.add_transition(c, 'q' + str(curr_state), 'q' + str(curr_state))
 
     elif paren:
-        for char in char_list:
-	    nfa.add_state('q' + str(nfa.get_next_state()), False, False)
-            nfa.add_to_ab(char)
-            nfa.add_transition(char, 'q' + str(curr_state), 'q' + str(nfa.get_next_state()-1))
+        c = 0
+
+        start_state = curr_state
+        while c < len(char_list)-1:
+            # Add letter to alphabet
+            nfa.add_to_ab(char_list[c])
+
+            nfa.add_state('q' + str(nfa.get_next_state()), False, False)
+            nfa.add_transition(char_list[c], 'q' + str(curr_state), 'q' + str(nfa.get_next_state()-1))
             curr_state = nfa.get_next_state()-1
+            c += 1
+        
+        # Add letter to alphabet
+        nfa.add_to_ab(char_list[c])
+
+        nfa.add_transition(char_list[c], 'q' + str(curr_state), 'q' + str(start_state))
+        curr_state = start_state
     else:
         # Add letter to alphabet
         nfa.add_to_ab(rx[p])
 
-        nfa.add_state('q' + str(nfa.get_next_state()), False, False)
-        nfa.add_transition(rx[p], 'q' + str(curr_state), 'q' + str(nfa.get_next_state()-1))
-        curr_state = nfa.get_next_state()-1
+        nfa.add_transition(rx[p], 'q' + str(curr_state), 'q' + str(curr_state))
 
-    # Second Epsilon transition
-    if p+2 < len(rx):
-        nfa.add_state('q' + str(nfa.get_next_state()), False, False)
-    else:
-        nfa.add_state('q' + str(nfa.get_next_state()), False, True)
-    
-    nfa.add_transition('Eps', 'q' + str(curr_state), 'q' + str(nfa.get_next_state()-1))
-    curr_state = nfa.get_next_state()-1 
-
-    # loopback epsilon transitions
-    nfa.add_transition('Eps', 'q' + str(curr_state), 'q' + str(state_before_char))
-    nfa.add_transition('Eps', 'q' + str(start_state), 'q' + str(curr_state))
-    
     logging.debug("Out star:" + str(p) + " curr_state:" + str(curr_state))
 
     return nfa, p, curr_state
@@ -227,52 +223,47 @@ def parse_star(rx, nfa, p, curr_state, square=False, paren=False, char_list=[]):
 def parse_plus(rx, nfa, p, curr_state, square=False, paren=False, char_list=[]):
     logging.debug("In plus:" + str(p) + " curr_state:" + str(curr_state))
     
-    # Add letter to alphabet
-    nfa.add_to_ab(rx[p])
-
-    # Save start state
-    start_state = curr_state
-
-    # First epsilon transition
-    nfa.add_state('q' + str(nfa.get_next_state()), False, False)
-    nfa.add_transition('Eps', 'q' + str(curr_state), 'q' + str(nfa.get_next_state()-1))
-    curr_state = nfa.get_next_state()-1
-
-    # Save state before character
-    state_before_char = curr_state
-
-    # Character transition
     if square:
         nfa.add_state('q' + str(nfa.get_next_state()), False, False)
         for char in char_list:
             nfa.add_to_ab(char)
             nfa.add_transition(char, 'q' + str(curr_state), 'q' + str(nfa.get_next_state()-1))
-
+            nfa.add_transition(char, 'q' + str(nfa.get_next_state()-1), 'q' + str(nfa.get_next_state()-1))
+        
         curr_state = nfa.get_next_state()-1
 
     elif paren:
-        for char in char_list:
+        c = 0
+
+        while c < len(char_list):
+            # Add letter to alphabet
+            nfa.add_to_ab(char_list[c])
+
             nfa.add_state('q' + str(nfa.get_next_state()), False, False)
-            nfa.add_to_ab(char)
-            nfa.add_transition(char, 'q' + str(curr_state), 'q' + str(nfa.get_next_state()-1))
+            nfa.add_transition(char_list[c], 'q' + str(curr_state), 'q' + str(nfa.get_next_state()-1))
             curr_state = nfa.get_next_state()-1
+            c += 1
+            
+        start_state = curr_state
+        j = 0
+
+        while j < len(char_list)-1:
+            nfa.add_state('q' + str(nfa.get_next_state()), False, False)
+            nfa.add_transition(char_list[j], 'q' + str(curr_state), 'q' + str(nfa.get_next_state()-1))
+            curr_state = nfa.get_next_state()-1
+            j += 1
+
+        nfa.add_transition(char_list[j], 'q' + str(curr_state), 'q' + str(start_state))
+        curr_state = start_state
     else:
+        nfa.add_to_ab(rx[p])
+
         nfa.add_state('q' + str(nfa.get_next_state()), False, False)
         nfa.add_transition(rx[p], 'q' + str(curr_state), 'q' + str(nfa.get_next_state()-1))
+
         curr_state = nfa.get_next_state()-1
-
-    # Second Epsilon transition
-    if p+2 < len(rx):
-        nfa.add_state('q' + str(nfa.get_next_state()), False, False)
-    else:
-        nfa.add_state('q' + str(nfa.get_next_state()), False, True)
-
-    nfa.add_transition('Eps', 'q' + str(curr_state), 'q' + str(nfa.get_next_state()-1))
-    curr_state = nfa.get_next_state()-1
-
-    # loopback epsilon transitions
-    nfa.add_transition('Eps', 'q' + str(curr_state), 'q' + str(state_before_char))
-
+        parse_star(rx, nfa, p, curr_state)
+        
     logging.debug("Out plus:" + str(p) + " curr_state:" + str(curr_state))
 
     return nfa, p, curr_state
