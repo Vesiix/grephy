@@ -12,7 +12,10 @@ def parse_RE(rx, nfa, p, curr_state):
         # if there's a union, split it up into pieces
         rx_list = rx.split('|')
         for x in rx_list:
-            parse_RE(x, nfa, 0, 0)
+            nfa.add_state('q' + str(nfa.get_next_state()), False, False)
+            nfa.add_transition('Epsilon', 'q0', 'q' + str(nfa.get_next_state()-1))
+            curr_state = nfa.get_next_state()-1
+            parse_RE(x, nfa, 0, curr_state)
     else:
         while p < len(rx):
             if re.match("[a-zA-Z0-9]", rx[p]):
