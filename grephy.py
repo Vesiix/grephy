@@ -49,7 +49,7 @@ def read_file(fname):
         sys.exit(1)
 
 def main():
-    logging.basicConfig(level=logging.DEBUG, format='%(levelname)s:%(message)s')
+    logging.basicConfig(level=logging.CRITICAL, format='%(levelname)s:%(message)s')
 
     parser = argparse.ArgumentParser(description='Searches files for regular expression pattern matches.')
     
@@ -67,17 +67,17 @@ def main():
 
     nfa = cnfa.create_nfa(args.REGEX)
 
-    #dfa = cdfa.create_dfa(nfa)
+    dfa = cdfa.create_dfa(nfa)
 
     nfa_dot = draw_fa.draw(nfa)
-    #dfa_dot = draw_fa.draw(dfa)
+    dfa_dot = draw_fa.draw(dfa)
 
     if args.preview:
         nfa_dot.render('nfa.dot', view=True)
-        #dfa_dot.render('dfa.dot', view=True)
+        dfa_dot.render('dfa.dot', view=True)
     elif not args.preview:
-        nfa_dot.save('nfa.dot')
-        #dfa_dot.save('dfa.dot')
+        #nfa_dot.save('nfa.dot')
+        dfa_dot.save('dfa.dot')
 
     #TODO: Fix bug where matches first letter = matches line
     #matches = find_match.find_match(dfa, args.FILE)
