@@ -19,3 +19,28 @@ optional arguments:
                         Output file for DFA
   -p, --preview         Opens a pdf view of DFA and NFA
 ```
+
+# Requirements
+This python2.7 program requires the basic python libraries and graphviz.
+
+# Examples
+```
+Command: 
+```
+./grephy.py "hel*o" test.txt
+````
+Output:
+```
+hello
+```
+```
+Command:
+```
+./grephy.py -p "hel*o" test.txt
+```
+Output:
+```
+hello
+```
+**Note: This will returnt he same command line output, while also popping up PDFs of the NFA and DFA
+```
