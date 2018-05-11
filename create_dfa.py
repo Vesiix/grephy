@@ -20,7 +20,7 @@ def create_dfa(nfa):
 
     logging.debug("DFA:")
 
-    if logging.getLogger(__name__).getEffectiveLevel() == 50:
+    if logging.getLogger(__name__).getEffectiveLevel() == 10:
         logging.debug(dfa.print_five_tuple())
 
     return dfa

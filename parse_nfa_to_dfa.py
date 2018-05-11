@@ -9,7 +9,6 @@ Description:
 
 import logging, sys
 import finite_automata as fa
-import pprint
 
 def parse_NFA(nfa):
     # Check for epsilons
@@ -52,14 +51,12 @@ def e_closure(nfa, dfa, curr_state):
     for t in curr_trans:
         if t.get_name() == "Epsilon":
             targets.append(t.get_target().get_name())
-    print targets
     return targets 
 
 def build_branch(nfa, dfa, curr_state, nfa_state, nfa_done=[]):
     if nfa_state.get_name() in nfa_done:
         return
     nex = nfa.find_src_transitions(nfa_state.get_name())
-    print 'state', nfa_state.get_name()
     for n in nex:
         if n.get_source() == n.get_target():
             dfa.add_transition(n.get_name(), 'q' + str(curr_state), 'q' + str(curr_state))
@@ -67,11 +64,7 @@ def build_branch(nfa, dfa, curr_state, nfa_state, nfa_done=[]):
             dfa.add_state('q' + str(dfa.get_next_state()), False, False)
             dfa.add_transition(n.get_name(), 'q' + str(curr_state), 'q' + str(dfa.get_next_state()-1))
             curr_state = dfa.get_next_state()-1
-        print 'here'
-        print 'cs', str(curr_state)
-        print 'n:', str(n)
         nfa_done.append(nfa_state.get_name())
-        print nfa_done
         build_branch(nfa, dfa, curr_state, n.get_target(), nfa_done=nfa_done)
 
     dfa.set_acc_state('q' + str(dfa.get_next_state()-1))

@@ -76,14 +76,14 @@ def main():
         nfa_dot.render('nfa.dot', view=True)
         dfa_dot.render('dfa.dot', view=True)
     elif not args.preview:
-        #nfa_dot.save('nfa.dot')
+        nfa_dot.save('nfa.dot')
         dfa_dot.save('dfa.dot')
 
     #TODO: Fix bug where matches first letter = matches line
-    #matches = find_match.find_match(dfa, args.FILE)
+    matches = find_match.find_match(dfa, args.FILE)
 
-    #for m in matches:
-    #    print m.strip()
+    for m in matches:
+        print m.strip()
 
 if __name__ == "__main__":
     main()

@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#/usr/bin/env python
 
 """
 find_match.py
@@ -9,6 +9,8 @@ Description:
 """
 
 import logging
+
+from state import *
 
 def find_match(dfa, input_file):
     """
@@ -54,6 +56,9 @@ def find_match(dfa, input_file):
 
                     if not found:
                         break
+                else:
+                    non_acc_state = State('null', False, False)
+                    curr_state = non_acc_state
             p+=1
 
         if curr_state.get_acc():
