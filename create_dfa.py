@@ -8,19 +8,20 @@ Description
 
 @author Jesse Opitz
 """
+# Python Libraries
+import re, sys, logging
 
+# Custom imports
 import finite_automata as fa
+import parse_nfa_to_dfa
 
 def create_dfa(nfa):
-    # finite_automata(states, alphabet, transitions, init_state, acc_state)
-    dfa = fa.finite_automata()
+    dfa = parse_nfa_to_dfa.parse_NFA(nfa)
 
-    dfa.set_alphabet(nfa.get_alphabet())
-    
-    state_num = 0
+    logging.debug("DFA:")
 
-    dfa.add_state('q' + str(state_num), True, False)
-    
-    state_num += 1
+    if logging.getLogger(__name__).getEffectiveLevel() == 10:
+        logging.debug(dfa.print_five_tuple())
 
     return dfa
+
