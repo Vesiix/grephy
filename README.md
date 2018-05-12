@@ -43,7 +43,6 @@ Command:
 Output:
 ```
 hello
+
+**Note: This will return the same command line output, while also popping up PDFs of the NFA and DFA
 ```
-
-**Note: This will returnt he same command line output, while also popping up PDFs of the NFA and DFA
-
