@@ -49,7 +49,7 @@ def read_file(fname):
         sys.exit(1)
 
 def main():
-    logging.basicConfig(level=logging.DEBUG, format='%(levelname)s:%(message)s')
+    logging.basicConfig(level=logging.CRITICAL, format='%(levelname)s:%(message)s')
 
     parser = argparse.ArgumentParser(description='Searches files for regular expression pattern matches.')
     
@@ -71,13 +71,28 @@ def main():
 
     nfa_dot = draw_fa.draw(nfa)
     dfa_dot = draw_fa.draw(dfa)
-
     if args.preview:
-        nfa_dot.render('nfa.dot', view=True)
-        dfa_dot.render('dfa.dot', view=True)
+        if args.NFA_FILE is None:
+            nfa_dot.render('nfa.dot', view=True)
+        elif args.NFA_FILE is not None:
+            nfa_dot.render(args.NFA_FILE[0], view=True)
+
+        if args.DFA_FILE is None:
+            dfa_dot.render('dfa.dot', view=True)
+        elif args.DFA_FILE is not None:
+            nfa_dot.render(args.DFA_FILE[0], view=True)
+
     elif not args.preview:
-        nfa_dot.save('nfa.dot')
-        dfa_dot.save('dfa.dot')
+        if args.NFA_FILE is None:
+            nfa_dot.save('nfa.dot')
+        elif args.NFA_FILE is not None:
+            nfa_dot.render(args.NFA_FILE[0])
+
+        if args.DFA_FILE is None:
+            dfa_dot.save('dfa.dot')
+        elif args.DFA_FILE is not None:
+            nfa_dot.save(args.DFA_FILE[0])
+
 
     #TODO: Fix bug where matches first letter = matches line
     matches = find_match.find_match(dfa, args.FILE)
