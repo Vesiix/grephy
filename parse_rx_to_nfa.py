@@ -49,17 +49,21 @@ def parse_RE(rx, nfa, p, curr_state):
                 # into char_list. Then, translates any ranges
                 # into usable characters in true_chars and adds
                 # all viable chars into true_chars.
+                true_chars = ''
                 char_list = ''
+                neg = False
+                print 'here', rx[p]
                 
+                if rx[p] == '^':
+                    neg = True
+                    p += 1
+
                 while not (rx[p] == ']'):
                     char_list += rx[p]
                     p += 1
 
                 if '-' in char_list:
                     c = 0
-
-                    true_chars = ''
-
                     while c < len(char_list):
                         if c+1 < len(char_list):
                             if char_list[c+1] == '-':
@@ -76,6 +80,16 @@ def parse_RE(rx, nfa, p, curr_state):
                         c += 1
                 else:
                     true_chars = char_list
+                
+                if neg:
+                    temp = ''
+                    s = 33
+                    e = 125
+                    while s < e:
+                        if chr(s) not in true_chars:
+                            temp += chr(s)
+                        s += 1
+                    true_chars = temp
 
                 next_state = nfa.get_next_state()
 
@@ -120,9 +134,26 @@ def parse_RE(rx, nfa, p, curr_state):
                 # If it's a group
                 p += 1
                 char_list = ''
+                true_chars = ''
+                neg = False
+
+                if rx[p] == '^':
+                    neg = True
+                    p += 1
+
                 while rx[p] != ')':
                     char_list += rx[p]
                     p += 1
+                
+                if neg:
+                    temp = ''
+                    s = 33
+                    e = 125
+                    while s < e:
+                        if chr(s) not in char_list:
+                            temp += chr(s)
+                        s += 1
+                    char_list = temp
 
                 if p+1 < len(rx):
                     if rx[p+1] == '*':
