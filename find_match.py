@@ -59,6 +59,7 @@ def find_match(dfa, input_file):
                 else:
                     non_acc_state = State('null', False, False)
                     curr_state = non_acc_state
+                    break
             p+=1
 
         if curr_state.get_acc():
